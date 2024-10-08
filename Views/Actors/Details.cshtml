@@ -1,0 +1,135 @@
+﻿@model F24_Assignment3_mwebster.Models.ActorDetailsVM
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>@Html.DisplayFor(model => model.actor.Name)</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.actor.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.actor.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.actor.Gender)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.actor.Gender)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.actor.Age)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.actor.Age)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.actor.Imdb)
+        </dt>
+        <dd class = "col-sm-10">
+            <a href="@Html.DisplayFor(model => model.actor.Imdb) ">IMDB Link</a>
+        </dd>
+        <dt class="col-sm-2">
+            Image
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.actor.ActorImage != null && Model.actor.ActorImage.Length != 0)
+            {
+                <img height="150" src="@Url.Action("GetActorPhoto", "Actors", new { id = Model.actor.Id })" />
+            }
+            else
+            {
+                <p>No Image Available</p>
+            }
+        </dd>
+       
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.actor.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+<p>
+    <h1>Movies</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Title
+                </th>
+                <th>
+                    IMDB Link
+                </th>
+                <th>
+                    Genre
+                </th>
+                <th>
+                    Release Date
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.movies)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        <a href="@Html.DisplayFor(modelItem => item.Imdb)">IMDB Link</a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Genre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReleaseDate)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-controller="Movies" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-controller="Movies" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-controller="Movies" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</p>
+<p>
+    @if (Model.redditAnalysis != null)
+    {
+        <h1>Reddit Sentiment Analysis</h1>
+
+        <!-- Overall sentiment score -->
+        <h2>Overall Sentiment Score: @Model.redditAnalysis.OverallSentiment</h2>
+
+        <!-- Table with Reddit posts and sentiment scores -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Reddit Post</th>
+                    <th>Sentiment Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var sentiment in Model.redditAnalysis.RedditSentiments)
+                {
+                    <tr>
+                        <td>@sentiment.RedditText</td>
+                        <td>@sentiment.SentimentScore</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+    <p>No Reddit data found for this actor.</p>
+    }
+</p>
